@@ -1,41 +1,10 @@
 "use client";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect, useMemo, useState } from "react";
-import {
-  MonitorSmartphone,
-  Boxes,
-  Database,
-  Wrench,
-  Brain,
-  Palette,
-  Code2,
-  Globe2,
-  Sparkles,
-  Rocket,
-  Star,
-  Zap,
-  Mail,
-  Github,
-  Linkedin,
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/components/LanguageSwitch";
-
-// Tilføj en custom parallax effekt
-function useParallax(value: MotionValue<number>, distance: number) {
-  return useTransform(value, [0, 1], [-distance, distance]);
-}
-
-// Tilføj en custom hover animation
-const hoverAnimation = {
-  scale: 1.05,
-  y: -5,
-  transition: { type: "spring", stiffness: 300 },
-};
 
 // Tilføj particle effekt ligesom i Hero
 const createStars = (count: number) => {
@@ -50,12 +19,8 @@ const createStars = (count: number) => {
 };
 
 export default function About() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
+
   const stars = useMemo(() => createStars(50), []);
   const scrollProgress = useScrollProgress();
   const sectionRef = useRef<HTMLDivElement>(null);

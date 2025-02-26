@@ -1,12 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useAnimationControls,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { useTranslation } from "@/components/LanguageSwitch";
@@ -33,9 +27,6 @@ const useViewportSize = () => {
 
   return { ...size, isMobile };
 };
-
-// Tilføj type definitioner for teksturer
-type TexturePromise = Promise<THREE.Texture>;
 
 // Tilføj en type for AnimatedText
 interface AnimatedTextProps {
