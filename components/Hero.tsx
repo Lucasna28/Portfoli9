@@ -490,7 +490,7 @@ export default function Hero() {
 
     // Animation states
     let phase = "rotating";
-    let startTime = Date.now();
+    const startTime = Date.now();
 
     // Forbedret easing funktion
     const easeOutQuart = (x: number): number => {
@@ -638,7 +638,7 @@ export default function Hero() {
       sphereMaterial.dispose();
       renderer.dispose();
     };
-  }, [isMobile]);
+  }, [isMobile, controls]);
 
   // Forbedret loading håndtering
   useEffect(() => {
