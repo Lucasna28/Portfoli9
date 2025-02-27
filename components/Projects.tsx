@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { useTranslation } from "@/components/LanguageSwitch";
 import ProjectModal from "./ProjectModal";
+import type { TranslationKey } from "@/translations";
 
 type Language = "da" | "en";
 
@@ -133,7 +134,7 @@ const ProjectLinks = ({
   t,
 }: {
   project: Project;
-  t: (key: string) => string;
+  t: (key: TranslationKey) => string;
 }) => (
   <motion.div
     className="flex gap-4 pt-4"
@@ -203,7 +204,7 @@ const ProjectCard = ({
   project: Project;
   index: number;
   currentLanguage: Language;
-  t: (key: string) => string;
+  t: (key: TranslationKey) => string;
 }) => (
   <motion.div initial="hidden" animate="visible" variants={fadeInUpVariants}>
     <div
