@@ -10,8 +10,7 @@ import ProjectModal from "./ProjectModal";
 type Language = "da" | "en";
 
 interface LocalizedString {
-  da: string;
-  en: string;
+  [key in Language]: string;
 }
 
 interface Project {
