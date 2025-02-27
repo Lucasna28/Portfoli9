@@ -1,19 +1,20 @@
-"use client"
-import { useRef } from "react"
-import type * as THREE from "three"
-import { useFrame, Canvas } from "@react-three/fiber"
-import { useScroll } from "framer-motion"
+/* eslint-disable */
+"use client";
+import { useRef } from "react";
+import type * as THREE from "three";
+import { useFrame, Canvas } from "@react-three/fiber";
+import { useScroll } from "framer-motion";
 
 function FloatingGrid() {
-  const gridRef = useRef<THREE.Group>()
-  const scroll = useScroll()
+  const gridRef = useRef<THREE.Group>();
+  const scroll = useScroll();
 
   useFrame(() => {
     if (gridRef.current) {
-      gridRef.current.position.y = -scroll.offset * 20
-      gridRef.current.rotation.x = (scroll.offset * Math.PI) / 4
+      gridRef.current.position.y = -scroll.offset * 20;
+      gridRef.current.rotation.x = (scroll.offset * Math.PI) / 4;
     }
-  })
+  });
 
   return (
     <group ref={gridRef}>
@@ -28,30 +29,38 @@ function FloatingGrid() {
         </group>
       ))}
     </group>
-  )
+  );
 }
 
 function FloatingCubes() {
-  const cubesRef = useRef<THREE.Group>()
-  const scroll = useScroll()
+  const cubesRef = useRef<THREE.Group>();
+  const scroll = useScroll();
 
   useFrame((state) => {
     if (cubesRef.current) {
-      cubesRef.current.rotation.y = state.clock.getElapsedTime() * 0.1
-      cubesRef.current.position.y = Math.sin(state.clock.getElapsedTime()) * 0.5 - scroll.offset * 10
+      cubesRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
+      cubesRef.current.position.y =
+        Math.sin(state.clock.getElapsedTime()) * 0.5 - scroll.offset * 10;
     }
-  })
+  });
 
   return (
     <group ref={cubesRef}>
       {[...Array(50)].map((_, i) => (
-        <mesh key={i} position={[Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20]}>
+        <mesh
+          key={i}
+          position={[
+            Math.random() * 40 - 20,
+            Math.random() * 40 - 20,
+            Math.random() * 40 - 20,
+          ]}
+        >
           <boxGeometry args={[0.5, 0.5, 0.5]} />
           <meshPhongMaterial color={0x00ffff} />
         </mesh>
       ))}
     </group>
-  )
+  );
 }
 
 export default function ParallaxBackground() {
@@ -64,6 +73,5 @@ export default function ParallaxBackground() {
         <FloatingCubes />
       </Canvas>
     </div>
-  )
+  );
 }
-

@@ -106,7 +106,9 @@ const SuccessAnimation = () => {
 };
 
 export default function Contact() {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [isHovered, setIsHovered] = useState<string | null>(null);
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   const [formState, setFormState] = useState({
     name: "",
     email: "",

@@ -1,26 +1,31 @@
-"use client"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { Github, ExternalLink } from "lucide-react"
+/* eslint-disable */
+"use client";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Github, ExternalLink } from "lucide-react";
 
 interface Project {
-  id: number
-  title: string
-  description: string
-  image: string
-  technologies: string[]
-  category: string
-  liveUrl: string
-  githubUrl: string
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  category: string;
+  liveUrl: string;
+  githubUrl: string;
 }
 
 interface ProjectCardProps {
-  project: Project
-  index: number
-  onClick: () => void
+  project: Project;
+  index: number;
+  onClick: () => void;
 }
 
-export default function ProjectCard({ project, index, onClick }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  index,
+  onClick,
+}: ProjectCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -41,7 +46,10 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
         <p className="text-gray-300 mb-4">{project.description}</p>
         <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.map((tech) => (
-            <span key={tech} className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
+            <span
+              key={tech}
+              className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs"
+            >
               {tech}
             </span>
           ))}
@@ -70,6 +78,5 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
-

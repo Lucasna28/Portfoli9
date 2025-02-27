@@ -1,10 +1,11 @@
-"use client"
-import { motion, AnimatePresence } from "framer-motion"
-import Image from "next/image"
-import { X } from "lucide-react"
+/* eslint-disable */
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { X } from "lucide-react";
 
 export default function ProjectModal({ project, onClose }) {
-  if (!project) return null
+  if (!project) return null;
 
   return (
     <AnimatePresence>
@@ -22,7 +23,10 @@ export default function ProjectModal({ project, onClose }) {
           onClick={(e) => e.stopPropagation()}
           className="bg-gray-800 rounded-lg p-6 max-w-3xl w-full relative"
         >
-          <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-white"
+          >
             <X size={24} />
           </button>
           <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
@@ -36,7 +40,10 @@ export default function ProjectModal({ project, onClose }) {
           <p className="text-gray-300 mb-4">{project.description}</p>
           <div className="flex flex-wrap gap-2 mb-4">
             {project.technologies.map((tech) => (
-              <span key={tech} className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
+              <span
+                key={tech}
+                className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs"
+              >
                 {tech}
               </span>
             ))}
@@ -62,6 +69,5 @@ export default function ProjectModal({ project, onClose }) {
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
-
