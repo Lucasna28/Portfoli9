@@ -4,7 +4,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { X } from "lucide-react";
 
-export default function ProjectModal({ project, onClose }) {
+interface Project {
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  github?: string;
+  demo?: string;
+}
+
+interface ProjectModalProps {
+  project: Project | null;
+  onClose: () => void;
+}
+
+export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   if (!project) return null;
 
   return (
@@ -50,7 +64,7 @@ export default function ProjectModal({ project, onClose }) {
           </div>
           <div className="flex justify-between">
             <a
-              href={project.liveUrl}
+              href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors"
@@ -58,7 +72,7 @@ export default function ProjectModal({ project, onClose }) {
               Live Demo
             </a>
             <a
-              href={project.githubUrl}
+              href={project.github}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition-colors"
