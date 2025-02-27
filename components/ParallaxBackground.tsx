@@ -11,8 +11,8 @@ function FloatingGrid() {
 
   useFrame(() => {
     if (gridRef.current) {
-      gridRef.current.position.y = -scroll.offset * 20;
-      gridRef.current.rotation.x = (scroll.offset * Math.PI) / 4;
+      gridRef.current.position.y = -scroll.scrollYProgress.get() * 20;
+      gridRef.current.rotation.x = (scroll.scrollYProgress.get() * Math.PI) / 4;
     }
   });
 
