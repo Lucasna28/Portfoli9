@@ -10,7 +10,8 @@ import ProjectModal from "./ProjectModal";
 type Language = "da" | "en";
 
 interface LocalizedString {
-  [key in Language]: string;
+  da: string;
+  en: string;
 }
 
 interface Project {
@@ -153,7 +154,7 @@ export default function Projects() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
             <motion.div
-              key={project.title[currentLanguage]}
+              key={project.title[currentLanguage as Language]}
               initial={{ opacity: 0, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -164,7 +165,7 @@ export default function Projects() {
               <div className="relative h-64">
                 <Image
                   src={project.image}
-                  alt={project.title[currentLanguage]}
+                  alt={project.title[currentLanguage as Language]}
                   fill
                   className="object-cover"
                 />
@@ -178,10 +179,10 @@ export default function Projects() {
                 viewport={{ once: true }}
               >
                 <h3 className="text-3xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">
-                  {project.title[currentLanguage]}
+                  {project.title[currentLanguage as Language]}
                 </h3>
                 <p className="text-lg text-gray-300 group-hover:text-white/90 transition-colors duration-300">
-                  {project.description[currentLanguage]}
+                  {project.description[currentLanguage as Language]}
                 </p>
               </motion.div>
             </motion.div>
@@ -193,8 +194,9 @@ export default function Projects() {
         <ProjectModal
           project={{
             ...selectedProject,
-            title: selectedProject.title[currentLanguage],
-            description: selectedProject.description[currentLanguage],
+            title: selectedProject.title[currentLanguage as Language],
+            description:
+              selectedProject.description[currentLanguage as Language],
           }}
           onClose={() => setSelectedProject(null)}
         />
