@@ -5,8 +5,13 @@ import * as THREE from "three";
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
-export function Particles({ count, mouse }) {
-  const mesh = useRef<THREE.InstancedMesh>();
+interface ParticlesProps {
+  count: number;
+  mouse: { current: { x: number; y: number } };
+}
+
+export function Particles({ count, mouse }: ParticlesProps) {
+  const mesh = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   const particles = useMemo(() => {
@@ -30,8 +35,8 @@ export function Particles({ count, mouse }) {
       const a = Math.cos(t) + Math.sin(t * 1) / 10;
       const b = Math.sin(t) + Math.cos(t * 2) / 10;
       const s = Math.cos(t);
-      particle.mx += (mouse[0] - particle.mx) * 0.01;
-      particle.my += (mouse[1] * -1 - particle.my) * 0.01;
+      particle.mx += (mouse.current.x - particle.mx) * 0.01;
+      particle.my += (mouse.current.y * -1 - particle.my) * 0.01;
       dummy.position.set(
         (particle.mx / 10) * a +
           xFactor +
