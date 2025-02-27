@@ -30,28 +30,9 @@ const SuccessAnimation = () => {
       {/* Centrale stråler */}
       {[...Array(12)].map((_, i) => (
         <motion.div
-          key={i}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{
-            scale: [0, 1.5, 0],
-            opacity: [0, 0.2, 0],
-          }}
-          transition={{
-            duration: 2,
-            delay: i * 0.1,
-            repeat: Infinity,
-            repeatDelay: 1,
-          }}
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            width: "2px",
-            height: "100px",
-            background: "linear-gradient(to top, transparent, #22c55e)",
-            transform: `rotate(${i * 30}deg)`,
-            transformOrigin: "bottom",
-          }}
+          key={`line-${i}`}
+          className={`absolute w-[2px] h-[100px] bg-gradient-to-t from-transparent to-green-500 origin-bottom
+                      transform rotate-${i * 30} left-1/2 top-1/2`}
         />
       ))}
 
@@ -78,7 +59,7 @@ const SuccessAnimation = () => {
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={`particle-${i}`}
-          className="absolute w-1 h-1 bg-green-500 rounded-full"
+          className="absolute w-1 h-1 bg-green-500 rounded-full left-1/2 top-1/2"
           initial={{
             opacity: 0,
             x: 0,
@@ -94,10 +75,6 @@ const SuccessAnimation = () => {
             delay: i * 0.1,
             repeat: Infinity,
             repeatDelay: 1,
-          }}
-          style={{
-            left: "50%",
-            top: "50%",
           }}
         />
       ))}

@@ -198,6 +198,27 @@ html {
   .bg-gradient-subtle {
     @apply bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10;
   }
+
+  /* Nye utility klasser */
+  .animate-float {
+    @apply transition-transform duration-300 hover:translate-y-[-5px];
+  }
+
+  .gradient-border {
+    @apply border border-transparent bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 bg-clip-border;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-lg shadow-primary/5;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-[1.02];
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  }
 }
 
 .perspective {
