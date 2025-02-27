@@ -1,16 +1,48 @@
 /* eslint-disable */
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { useTranslation } from "@/components/LanguageSwitch";
+import ProjectModal from "./ProjectModal";
+
+type Language = "da" | "en";
+
+interface LocalizedString {
+  da: string;
+  en: string;
+}
+
+interface Project {
+  title: LocalizedString;
+  description: LocalizedString;
+  image: string;
+  technologies: string[];
+  github?: string;
+  demo?: string;
+}
 
 export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { t, currentLanguage } = useTranslation();
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  const projects = [
+  const projects: Project[] = [
+    {
+      title: {
+        da: "Portfolio Website",
+        en: "Portfolio Website",
+      },
+      description: {
+        da: "Min personlige portfolio hjemmeside bygget med Next.js, Three.js og Tailwind CSS.",
+        en: "My personal portfolio website built with Next.js, Three.js, and Tailwind CSS.",
+      },
+      image: "/projects/portfolio.png",
+      technologies: ["Next.js", "Three.js", "Tailwind CSS", "TypeScript"],
+      github: "https://github.com/yourusername/portfolio",
+      demo: "https://yourportfolio.com",
+    },
     {
       title: "Min Kalender",
       description: {
@@ -82,123 +114,73 @@ export default function Projects() {
   ];
 
   return (
-    <section id="projects" className="relative py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          className="text-4xl font-bold text-white mb-16"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+    <section
+      ref={containerRef}
+      className="relative min-h-screen w-full bg-transparent z-10"
+    >
+      <div className="max-w-7xl mx-auto px-4 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
         >
-          {t("projects.title")}
-        </motion.h2>
+          <h2 className="text-4xl font-bold text-white mb-4">
+            {t.projects.title}
+          </h2>
+          <p className="text-xl text-gray-400">{t.projects.subtitle}</p>
+        </motion.div>
 
-        <div className="space-y-32" ref={containerRef}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
             <motion.div
-              key={project.title}
+              key={project.title[currentLanguage]}
               initial={{ opacity: 0, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="group relative bg-gray-800/50 rounded-lg overflow-hidden hover:bg-gray-700/50 transition-colors duration-300"
+              onClick={() => setSelectedProject(project)}
             >
-              {/* Projekt Card */}
-              <div
-                className="group relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-4 rounded-2xl
-                            transition-colors duration-300 hover:bg-white/5"
-              >
-                {/* Billede Container */}
-                <div className="relative aspect-[16/9] rounded-xl overflow-hidden">
-                  {/* Gradient overlay */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 z-10 
-                                opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-
-                  {/* Billede */}
-                  <div
-                    className="relative w-full h-full transform transition-transform duration-700
-                                group-hover:scale-105"
-                  >
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      priority={index === 0}
-                    />
-                  </div>
-                </div>
-
-                {/* Indhold */}
-                <div className="relative space-y-6">
-                  <motion.div
-                    className="space-y-2"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <h3 className="text-3xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    <p className="text-lg text-gray-300 group-hover:text-white/90 transition-colors duration-300">
-                      {project.description[currentLanguage]}
-                    </p>
-                  </motion.div>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <motion.span
-                        key={tag}
-                        className="px-4 py-1.5 text-sm text-white/80 border border-white/10 rounded-full
-                                 transition-all duration-300 hover:border-purple-500/50 hover:bg-purple-500/10
-                                 hover:text-white cursor-default"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                      >
-                        {tag}
-                      </motion.span>
-                    ))}
-                  </div>
-
-                  {/* Links */}
-                  <div className="flex gap-4 pt-4">
-                    <motion.a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-6 py-2.5 bg-white text-black rounded-xl
-                               font-medium transition-all duration-300 hover:bg-purple-100
-                               hover:shadow-lg hover:shadow-purple-500/25 group/link"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      <span>{t("projects.liveDemo")}</span>
-                      <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-0.5" />
-                    </motion.a>
-                    <motion.a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium
-                               border border-white/10 hover:border-purple-500/50
-                               transition-all duration-300 hover:bg-purple-500/10 group/link"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      <span className="text-white">
-                        {t("projects.sourceCode")}
-                      </span>
-                      <Github className="w-4 h-4 text-white transition-transform duration-300 group-hover/link:translate-x-0.5" />
-                    </motion.a>
-                  </div>
-                </div>
+              <div className="relative h-64">
+                <Image
+                  src={project.image}
+                  alt={project.title[currentLanguage]}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
+              <motion.div
+                className="p-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-3xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300">
+                  {project.title[currentLanguage]}
+                </h3>
+                <p className="text-lg text-gray-300 group-hover:text-white/90 transition-colors duration-300">
+                  {project.description[currentLanguage]}
+                </p>
+              </motion.div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {selectedProject && (
+        <ProjectModal
+          project={{
+            ...selectedProject,
+            title: selectedProject.title[currentLanguage],
+            description: selectedProject.description[currentLanguage],
+          }}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </section>
   );
 }
