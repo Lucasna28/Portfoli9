@@ -4,15 +4,17 @@ import { useRef } from "react";
 import { useFrame, Canvas } from "@react-three/fiber";
 import type { ThreeElements } from "@react-three/fiber";
 import { useScroll } from "framer-motion";
+import { Group } from "three";
 
 function FloatingGrid() {
-  const gridRef = useRef<ThreeElements["group"]>(null);
+  const gridRef = useRef<Group>(null);
   const scroll = useScroll();
 
   useFrame(() => {
-    if (gridRef.current) {
-      gridRef.current.position.y = -scroll.scrollYProgress.get() * 20;
-      gridRef.current.rotation.x = (scroll.scrollYProgress.get() * Math.PI) / 4;
+    const grid = gridRef.current;
+    if (grid) {
+      grid.position.y = -scroll.scrollYProgress.get() * 20;
+      grid.rotation.x = (scroll.scrollYProgress.get() * Math.PI) / 4;
     }
   });
 
@@ -33,13 +35,14 @@ function FloatingGrid() {
 }
 
 function FloatingCubes() {
-  const cubesRef = useRef<ThreeElements["group"]>(null);
+  const cubesRef = useRef<Group>(null);
   const scroll = useScroll();
 
   useFrame((state) => {
-    if (cubesRef.current) {
-      cubesRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
-      cubesRef.current.position.y =
+    const cubes = cubesRef.current;
+    if (cubes) {
+      cubes.rotation.y = state.clock.getElapsedTime() * 0.1;
+      cubes.position.y =
         Math.sin(state.clock.getElapsedTime()) * 0.5 -
         scroll.scrollYProgress.get() * 10;
     }
