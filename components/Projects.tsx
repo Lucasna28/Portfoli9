@@ -146,9 +146,9 @@ export default function Projects() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-white mb-4">
-            {t.projects.title}
+            {t("projects.title")}
           </h2>
-          <p className="text-xl text-gray-400">{t.projects.subtitle}</p>
+          <p className="text-xl text-gray-400">{t("projects.subtitle")}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
