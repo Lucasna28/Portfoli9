@@ -9,6 +9,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import StarBackground from "@/components/StarBackground";
 import Projects from "@/components/Projects";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export default function Home() {
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen text-white relative">
+      <ScrollProgress />
       <StarBackground />
       <Header />
       <Hero />

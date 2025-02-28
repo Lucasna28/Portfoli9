@@ -2,7 +2,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useRef, useEffect, useMemo, useState } from "react";
+import { useRef, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/components/LanguageSwitch";
@@ -21,11 +21,8 @@ const createStars = (count: number) => {
 
 export default function About() {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
-
   const stars = useMemo(() => createStars(50), []);
-  const scrollProgress = useScrollProgress();
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef);
   const [activeTab, setActiveTab] = useState("intro");
   const { t } = useTranslation();
 
@@ -90,62 +87,12 @@ export default function About() {
     },
   };
 
-  // Tilføj en custom scroll progress indikator
-  function useScrollProgress() {
-    const [progress, setProgress] = useState(0);
-
-    useEffect(() => {
-      const handleScroll = () => {
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-        const scrollTop = window.scrollY;
-        const scrollPercent =
-          (scrollTop / (documentHeight - windowHeight)) * 100;
-        setProgress(scrollPercent);
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    return progress;
-  }
-
-  // Tilføj en custom intersection observer hook
-  function useInView(ref: React.RefObject<HTMLElement>, threshold = 0.1) {
-    const [isInView, setIsInView] = useState(false);
-
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => setIsInView(entry.isIntersecting),
-        { threshold }
-      );
-
-      if (ref.current) {
-        observer.observe(ref.current);
-      }
-
-      return () => observer.disconnect();
-    }, [ref, threshold]);
-
-    return isInView;
-  }
-
   return (
     <section
       id="about"
       ref={sectionRef}
       className="py-32 relative overflow-hidden"
     >
-      {/* Progress indikator */}
-      <motion.div
-        className="fixed top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500 origin-top z-50"
-        style={{
-          scaleY: scrollProgress / 100,
-          opacity: isInView ? 1 : 0,
-        }}
-      />
-
       {/* Animerede baggrundsstjerner */}
       <div className="absolute inset-0 z-0">
         {stars.map((star) => (

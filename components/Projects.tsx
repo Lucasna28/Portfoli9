@@ -1,44 +1,22 @@
 /* eslint-disable */
 "use client";
 import { useRef, useState } from "react";
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { useTranslation } from "@/components/LanguageSwitch";
 import ProjectModal from "./ProjectModal";
+import { projects } from "@/data/projects";
+import {
+  fadeInUpVariants,
+  buttonHoverVariants,
+  commonTransitions,
+  commonAnimations,
+} from "@/styles/animations";
+import type { Project } from "@/data/projects";
 import type { TranslationKey } from "@/translations";
 
 type Language = "da" | "en";
-
-interface LocalizedString {
-  da: string;
-  en: string;
-  [key: string]: string;
-}
-
-interface Project {
-  title: LocalizedString;
-  description: LocalizedString;
-  image: string;
-  technologies: string[];
-  github?: string;
-  demo?: string;
-  isSlowLoading?: boolean;
-}
-
-// Genbrugeligt motion variants objekt
-const fadeInUpVariants = {
-  hidden: { opacity: 0, y: 100 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      type: "spring",
-      bounce: 0.3,
-    },
-  },
-};
 
 // Genbrugelig ProjectTag komponent
 const ProjectTag = ({ tech, index }: { tech: string; index: number }) => (
@@ -48,8 +26,7 @@ const ProjectTag = ({ tech, index }: { tech: string; index: number }) => (
     whileInView={{ opacity: 1, scale: 1 }}
     transition={{
       delay: 0.5 + index * 0.1,
-      type: "spring",
-      stiffness: 400,
+      ...commonTransitions.spring,
     }}
     whileHover={{
       scale: 1.1,
@@ -71,14 +48,14 @@ const ProjectImage = ({
   currentLanguage,
 }: {
   image: string;
-  title: LocalizedString;
+  title: Project["title"];
   index: number;
   currentLanguage: Language;
 }) => (
   <motion.div
     className="relative aspect-[16/9] rounded-xl overflow-hidden"
     whileHover={{ scale: 1.02 }}
-    transition={{ duration: 0.3 }}
+    transition={commonTransitions.smooth}
   >
     <div
       className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 z-10 
@@ -102,7 +79,6 @@ const ProjectImage = ({
 // Genbrugelig LoadingIndicator komponent
 const LoadingIndicator = () => (
   <>
-    {/* Desktop tooltip */}
     <div
       className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 p-3 bg-gradient-to-b from-purple-500/10 to-purple-500/5
                    backdrop-blur-xl border border-purple-500/20 rounded-2xl text-sm text-white
@@ -118,7 +94,6 @@ const LoadingIndicator = () => (
       </p>
     </div>
 
-    {/* Mobile indicator */}
     <div className="md:hidden text-sm text-purple-300/90 absolute -bottom-10 left-0 w-full text-center pointer-events-none">
       <div className="flex items-center justify-center gap-2">
         <div className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
@@ -138,8 +113,7 @@ const ProjectLinks = ({
 }) => (
   <motion.div
     className="flex gap-4 pt-4"
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
+    {...commonAnimations.fadeIn}
     transition={{ delay: 0.6, duration: 0.5 }}
   >
     {project.demo && (
@@ -152,19 +126,19 @@ const ProjectLinks = ({
           className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-white to-purple-50 text-black rounded-xl
                     font-medium transition-all duration-300 hover:to-purple-100
                     hover:shadow-lg hover:shadow-purple-500/25 group/link relative overflow-hidden"
-          whileHover={{
-            scale: 1.05,
-            boxShadow: "0 10px 30px -10px rgba(168, 85, 247, 0.5)",
-          }}
-          transition={{ type: "spring", stiffness: 400 }}
+          whileHover={buttonHoverVariants.hover}
+          transition={commonTransitions.spring}
         >
           <span className="relative flex items-center gap-1.5">
             {t("projects.liveDemo")}
             {project.isSlowLoading && (
               <div className="flex gap-0.5 items-center ml-1">
-                <div className="w-1 h-1 rounded-full bg-purple-500/80" />
-                <div className="w-1 h-1 rounded-full bg-purple-500/80" />
-                <div className="w-1 h-1 rounded-full bg-purple-500/80" />
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 h-1 rounded-full bg-purple-500/80"
+                  />
+                ))}
               </div>
             )}
           </span>
@@ -180,12 +154,8 @@ const ProjectLinks = ({
         className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium
                   border border-white/10 hover:border-purple-500/50
                   transition-all duration-300 hover:bg-purple-500/10 group/link"
-        whileHover={{
-          scale: 1.05,
-          backgroundColor: "rgba(168, 85, 247, 0.1)",
-          borderColor: "rgba(168, 85, 247, 0.5)",
-        }}
-        transition={{ type: "spring", stiffness: 400 }}
+        whileHover={buttonHoverVariants.hover}
+        transition={commonTransitions.spring}
       >
         <span className="text-white">{t("projects.sourceCode")}</span>
         <Github className="w-4 h-4 text-white transition-transform duration-300 group-hover/link:translate-x-0.5" />
@@ -221,26 +191,19 @@ const ProjectCard = ({
       <div className="relative space-y-6">
         <motion.div
           className="space-y-2"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{
-            delay: 0.2,
-            duration: 0.5,
-            type: "spring",
-            stiffness: 100,
-          }}
+          {...commonAnimations.slideIn}
+          transition={commonTransitions.smoothSpring}
         >
           <motion.h3
             className="text-3xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300"
             whileHover={{ scale: 1.02, x: 10 }}
-            transition={{ type: "spring", stiffness: 400 }}
+            transition={commonTransitions.spring}
           >
             {project.title[currentLanguage]}
           </motion.h3>
           <motion.p
             className="text-lg text-gray-300 group-hover:text-white/90 transition-colors duration-300"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            {...commonAnimations.fadeIn}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
             {project.description[currentLanguage]}
@@ -249,8 +212,7 @@ const ProjectCard = ({
 
         <motion.div
           className="flex flex-wrap gap-2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...commonAnimations.fadeIn}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           {project.technologies.map((tech, techIndex) => (
@@ -268,125 +230,19 @@ export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { t, currentLanguage } = useTranslation();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  const projects: Project[] = [
-    {
-      title: {
-        da: "Min Kalender",
-        en: "My Calendar",
-      },
-      description: {
-        da: "En moderne og brugervenlig kalenderapplikation med fokus på simplicitet og brugeroplevelse. Features inkluderer begivenhedshåndtering, deling og påmindelser.",
-        en: "A modern and user-friendly calendar application focusing on simplicity and user experience. Features include event management, sharing, and reminders.",
-      },
-      image: "/calender-project.png",
-      technologies: [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "Supabase",
-        "Shadcn UI",
-        "Zod",
-        "Motion",
-        "date-fns",
-      ],
-      demo: "https://min-kalender.vercel.app/calendar",
-      github: "https://github.com/lucasna28/min-kalender",
-    },
-    {
-      title: {
-        da: "Din Mægler",
-        en: "Your Realtor",
-      },
-      description: {
-        da: "En moderne ejendomsmægler platform udviklet som skoleprojekt. Implementeret med custom API integration, avancerede søgefunktioner og interaktivt boligkatalog. Features inkluderer boligsøgning, mægleroversigt og detaljerede boligvisninger med animationer.",
-        en: "A modern real estate platform developed as a school project. Implemented with custom API integration, advanced search functions, and interactive property catalog. Features include property search, agent overview, and detailed property views with animations.",
-      },
-      image: "/dinm-gler.png",
-      technologies: [
-        "Next.js",
-        "React",
-        "Motion",
-        "Zod",
-        "Tailwind CSS",
-        "JavaScript",
-      ],
-      demo: "https://din-meagler.vercel.app/",
-      github: "https://github.com/Lucasna28/din-meagler",
-      isSlowLoading: true,
-    },
-    {
-      title: {
-        da: "CinemaNest",
-        en: "CinemaNest",
-      },
-      description: {
-        da: "En moderne mobile-first filmapplikation bygget med TMDB API'et. Features inkluderer brugerautentificering via Clerk, filmdetaljer, ratings og anmeldelser. Optimeret for mobiloplevelsen med responsivt design og touch-venlige interaktioner.",
-        en: "A modern mobile-first movie application built with the TMDB API. Features include user authentication via Clerk, movie details, ratings, and reviews. Optimized for mobile experience with responsive design and touch-friendly interactions.",
-      },
-      image: "/movie.png",
-      technologies: [
-        "React",
-        "TypeScript",
-        "Clerk",
-        "Shadcn UI",
-        "Tailwind CSS",
-        "TMDB API",
-      ],
-      demo: "https://cinemanest.vercel.app/",
-      github: "https://github.com/Lucasna28/Moviez",
-    },
-    {
-      title: {
-        da: t("projects.spotify.title"),
-        en: t("projects.spotify.title"),
-      },
-      description: {
-        da: t("projects.spotify.description"),
-        en: t("projects.spotify.description"),
-      },
-      image: "/spotify.png",
-      technologies: [
-        "Next.js",
-        "React",
-        "Tailwind CSS",
-        "TypeScript",
-        "Spotify API",
-        "shadcn/ui",
-        "motion",
-      ],
-      demo: "https://spatify.vercel.app/",
-      github: "https://github.com/Lucasna28/s",
-    },
-  ];
 
   return (
     <section id="projects" className="relative py-20" ref={containerRef}>
-      {/* Progress indikator */}
-      <motion.div
-        className="fixed top-0 right-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500 origin-top z-50"
-        style={{
-          scaleY: scrollYProgress,
-          opacity: 1,
-        }}
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
           className="text-4xl font-bold text-white mb-16"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          {...commonAnimations.slideIn}
         >
           {t("projects.title")}
         </motion.h2>
 
         <div className="space-y-32">
-          {projects.map((project, index) => (
+          {projects(t).map((project, index) => (
             <ProjectCard
               key={project.title[currentLanguage]}
               project={project}
