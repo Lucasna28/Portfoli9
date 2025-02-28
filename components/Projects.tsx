@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
-import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { useTranslation } from "@/components/LanguageSwitch";
@@ -268,11 +268,10 @@ export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { t, currentLanguage } = useTranslation();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
-  // Tilføj scroll kontrol
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
 
   const projects: Project[] = [
     {
@@ -366,7 +365,16 @@ export default function Projects() {
   ];
 
   return (
-    <section id="projects" className="relative py-20">
+    <section id="projects" className="relative py-20" ref={containerRef}>
+      {/* Progress indikator */}
+      <motion.div
+        className="fixed top-0 right-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500 origin-top z-50"
+        style={{
+          scaleY: scrollYProgress,
+          opacity: 1,
+        }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
           className="text-4xl font-bold text-white mb-16"
@@ -377,7 +385,7 @@ export default function Projects() {
           {t("projects.title")}
         </motion.h2>
 
-        <div className="space-y-32" ref={containerRef}>
+        <div className="space-y-32">
           {projects.map((project, index) => (
             <ProjectCard
               key={project.title[currentLanguage]}
